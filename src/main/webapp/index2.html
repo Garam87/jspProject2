@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>단어장</title>
+    <style>
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+      }
+      .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+      }
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>단어장</h1>
+
+    <!-- 단어 추가 버튼 -->
+    <button onclick="showAddModal()">단어 추가</button>
+
+    <!-- 단어 목록 -->
+    <ul id="word-list"></ul>
+
+    <!-- 단어 추가 모달 창 -->
+    <div id="add-modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="hideAddModal()">&times;</span>
+        <h2>단어 추가</h2>
+        <form>
+          <label for="word">단어:</label>
+          <input type="text" id="word">
+          <label for="definition">뜻:</label>
+          <input type="text" id="definition">
+          <label for="memo">메모:</label>
+          <textarea id="memo"></textarea>
+          <button type="button" onclick="addWord()">추가</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- 단어 수정 모달 창 -->
+    <div id="edit-modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="hideEditModal()">&times;</span>
+        <h2>단어 수정</h2>
+        <form>
+          <input type="hidden" id="edit-index">
+          <label for="edit-word">단어:</label>
+          <input type="text" id="edit-word">
+          <label for="edit-definition">뜻:</label>
+          <input type="text" id="edit-definition">
+          <label for="edit-memo">메모:</label>
+          <textarea id="edit-memo"></textarea>
+          <button type="button" onclick="editWord()">저장</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      // 단어 목록
+      let wordList = [];
+
+      // 단어 추가
+      function addWord() {
+        let word = document.getElementById("word").value;
+        let definition = document.getElementById("definition").value;
+        let memo = document.getElementById("memo").value;
+
+    // 입력값 유효성 검사
+    if (word.trim() === "" || definition.trim() === "") {
+      alert("단어와 뜻은 필수 입력사항입니다.");
+      return;
+    }
+
+    // 단어 추가
+    wordList.push({ word: word, definition: definition, memo: memo });
+
+    // 모달 창 닫기
+    hideAddModal();
+
+    // 단어 목록 갱신
+    displayWordList();
+  }
+
+  // 단어 수정
+  function editWord() {
+    let index = parseInt(document.getElementById("edit-index").value);
+    let word = document.getElementById("edit-word").value;
+    let definition = document.getElementById("edit-definition").value;
+    let memo = document.getElementById("edit-memo").value;
+
+    // 입력값 유효성 검사
+    if (word.trim() === "" || definition.trim() === "") {
+      alert("단어와 뜻은 필수 입력사항입니다.");
+      return;
+    }
+
+    // 단어 수정
+    wordList[index].word = word;
+    wordList[index].definition = definition;
+    wordList[index].memo = memo;
+
+    // 모달 창 닫기
+    hideEditModal();
+
+    // 단어 목록 갱신
+    displayWordList();
+  }
+
+  // 단어 삭제
+  function deleteWord(index) {
+    // 확인 메시지 표시
+    if (!confirm("삭제하시겠습니까?")) {
+      return;
+    }
+
+    // 단어 삭제
+    wordList.splice(index, 1);
+
+    // 단어 목록 갱신
+    displayWordList();
+  }
+
+  // 단어 목록 표시
+  function displayWordList() {
+    let wordListElement = document.getElementById("word-list");
+    wordListElement.innerHTML = "";
+
+    for (let i = 0; i < wordList.length; i++) {
+      let wordItem = document.createElement("li");
+      let wordTitle = document.createElement("div");
+      let wordDefinition = document.createElement("div");
+      let wordMemo = document.createElement("div");
+      let editButton = document.createElement("button");
+      let deleteButton = document.createElement("button");
+
+      wordTitle.innerText = wordList[i].word;
+      wordDefinition.innerText = wordList[i].definition;
+      wordMemo.innerText = wordList[i].memo;
+      editButton.innerText = "수정";
+      deleteButton.innerText = "삭제";
+
+      editButton.onclick = function() {
+        showEditModal(i);
+      };
+      deleteButton.onclick = function() {
+        deleteWord(i);
+      };
+
+      wordItem.appendChild(wordTitle);
+      wordItem.appendChild(wordDefinition);
+      wordItem.appendChild(wordMemo);
+      wordItem.appendChild(editButton);
+      wordItem.appendChild(deleteButton);
+
+      wordListElement.appendChild(wordItem);
+    }
+  }
+
+  // 단어 추가 모달 창 표시
+  function showAddModal() {
+    document.getElementById("word").value = "";
+    document.getElementById("definition").value = "";
+    document.getElementById("memo").value = "";
+    document.getElementById("add-modal").style.display = "block";
+  }
+
+  // 단어 추가 모달 창 닫기
+  function hideAddModal() {
+    document.getElementById("add-modal").style.display = "none";
+  }
+
+  // 단어 수정 모달 창 표시
+  function showEditModal(index) {
+    document.getElementById("edit-index").value = index;
+    document.getElementById("edit-word").value
+    document.getElementById("edit-index").value = index;
+    document.getElementById("edit-word").value 
+= wordList[index].word;
+document.getElementById("edit-definition").value = wordList[index].definition;
+document.getElementById("edit-memo").value = wordList[index].memo;
+document.getElementById("edit-modal").style.display = "block";
+}
+
+  // 단어 수정 모달 창 닫기
+  function hideEditModal() {
+    document.getElementById("edit-modal").style.display = "none";
+  }
+
+  // 초기화
+  function init() {
+    displayWordList();
+  }
+
+  init();
+</script>
+</body>
+</html>
